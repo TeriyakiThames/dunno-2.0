@@ -38,8 +38,8 @@ dunno-2.0/
 
 ### 1️⃣ Prerequisites
 
-- Node.js 18+
-- pnpm v9+
+- Node.js 20+
+- pnpm v10+
 
 ```powershell
 npm install -g pnpm
