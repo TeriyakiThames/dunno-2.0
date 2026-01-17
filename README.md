@@ -137,7 +137,7 @@ Example (from `turbo.json`):
 1. Create a feature branch
 
    ```powershell
-   git checkout -b feature/my-feature
+   git checkout -b feat/my-feature
    ```
 
 2. Make changes
