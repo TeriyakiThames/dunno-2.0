@@ -1,2 +1,187 @@
-# dunno-2.0
+# dunno-2.0 Monorepo
 
+A modern **pnpm + Turborepo** monorepo containing a web frontend, backend API, and shared packages. This setup is designed for **type safety**, **fast builds**, and **scalable collaboration**.
+
+---
+
+## 📦 Repository Structure
+
+```
+dunno-2.0/
+├── apps/
+│   ├── web/          # Frontend (Next.js / React)
+│   └── api/          # Backend (NestJS)
+│
+├── packages/
+│   ├── shared-types/ # Shared TypeScript types (DTOs, interfaces)
+│   └── config/       # Shared ESLint / TS / Prettier configs (future)
+│
+├── turbo.json        # Turborepo pipeline configuration
+├── pnpm-workspace.yaml
+├── package.json      # Workspace root configuration
+└── README.md
+```
+
+---
+
+## 🛠 Tech Stack
+
+- **Package Manager**: pnpm (workspace-based)
+- **Monorepo Tooling**: Turborepo
+- **Frontend**: Next.js + React
+- **Backend**: NestJS
+- **Language**: TypeScript
+
+---
+
+## 🚀 Getting Started
+
+### 1️⃣ Prerequisites
+
+- Node.js 18+
+- pnpm v9+
+
+```powershell
+npm install -g pnpm
+```
+
+---
+
+### 2️⃣ Install Dependencies
+
+From the repository root:
+
+```powershell
+pnpm install
+```
+
+> pnpm will install all workspace dependencies and link local packages automatically.
+
+---
+
+### 3️⃣ Build Shared Packages
+
+Shared packages **must be built first**:
+
+```powershell
+pnpm --filter @dunno/shared-types build
+```
+
+---
+
+### 4️⃣ Run Applications
+
+#### Web (Next.js)
+
+```powershell
+pnpm --filter @dunno/web dev
+```
+
+#### API (NestJS)
+
+```powershell
+pnpm --filter @dunno/api start:dev
+```
+
+---
+
+## 🔗 Shared Types Usage
+
+Shared types live in:
+
+```
+packages/shared-types
+```
+
+They are consumed using workspace dependencies:
+
+```ts
+import type { User } from "@dunno/shared-types";
+```
+
+### Why this matters
+
+- One source of truth for DTOs
+- No duplicated types between frontend and backend
+- End-to-end type safety
+
+---
+
+## ⚡ Turborepo
+
+Turborepo handles:
+
+- Incremental builds
+- Task caching
+- Dependency-aware pipelines
+
+Example (from `turbo.json`):
+
+- `web` and `api` depend on `shared-types#build`
+- Shared packages build once, reused everywhere
+
+---
+
+## 🧹 Code Style & Formatting
+
+- **Prettier** formats all files
+- **ESLint** is configured per app
+- Formatting is enforced via editor + CI (recommended)
+
+---
+
+## 🤝 Contributing
+
+### Workflow
+
+1. Create a feature branch
+
+   ```powershell
+   git checkout -b feature/my-feature
+   ```
+
+2. Make changes
+3. Ensure builds pass:
+
+   ```powershell
+   pnpm build
+   ```
+
+4. Commit with clear messages
+5. Open a Pull Request
+
+---
+
+## 📌 Contribution Guidelines
+
+- Keep shared types **backend-agnostic**
+- Do not import backend-only logic into `shared-types`
+- Prefer adding new packages instead of cross-app imports
+- Keep builds deterministic
+
+---
+
+## 🧠 Design Principles
+
+- **Single source of truth** for types
+- **Explicit dependencies** over magic
+- **Fast feedback loops** via Turborepo
+- **Scalable structure** for future apps/packages
+
+---
+
+## 📄 License
+
+MIT (or your preferred license)
+
+---
+
+## ✨ Final Notes
+
+This monorepo is intentionally strict. The upfront setup pays off with:
+
+- Fewer runtime bugs
+- Safer refactors
+- Better developer experience
+
+Happy hacking 🚀
