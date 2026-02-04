@@ -6,10 +6,13 @@
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
-    "clean": "turbo run clean"
+    "clean": "turbo run clean",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "devDependencies": {
     "prettier": "^3.8.0",
+    "prettier-plugin-tailwindcss": "^0.7.2",
     "turbo": "^2.7.5"
   }
 }
