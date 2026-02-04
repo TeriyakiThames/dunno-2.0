@@ -1,12 +1,14 @@
 {
-  "name": "dunno-2.0",
+  "name": "calculories",
   "packageManager": "pnpm@10.28.0",
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
-    "clean": "turbo run clean"
+    "clean": "turbo run clean",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "devDependencies": {
     "prettier": "^3.8.0",
