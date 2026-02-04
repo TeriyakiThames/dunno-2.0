@@ -8,7 +8,7 @@ type Locale = "en" | "th";
 export default function LocaleSwitcher({ locale }: { locale: Locale }) {
   const pathname = usePathname();
 
-  // remove current locale from path
+  // Remove current locale from path
   const pathWithoutLocale = pathname.replace(/^\/(en|th)/, "");
 
   return (
