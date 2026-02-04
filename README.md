@@ -1,4 +1,4 @@
-# dunno-2.0 Monorepo
+# Calculories Monorepo
 
 A modern **pnpm + Turborepo** monorepo containing a web frontend, backend API, and shared packages. This setup is designed for **type safety**, **fast builds**, and **scalable collaboration**.
 
@@ -7,7 +7,7 @@ A modern **pnpm + Turborepo** monorepo containing a web frontend, backend API, a
 ## 📦 Repository Structure
 
 ```
-dunno-2.0/
+calculories/
 ├── apps/
 │   ├── web/          # Frontend (Next.js / React)
 │   └── api/          # Backend (NestJS)
@@ -64,7 +64,7 @@ pnpm install
 Shared packages **must be built first**:
 
 ```powershell
-pnpm --filter @dunno/shared-types build
+pnpm --filter @calculories/shared-types build
 ```
 
 ---
@@ -74,13 +74,13 @@ pnpm --filter @dunno/shared-types build
 #### Web (Next.js)
 
 ```powershell
-pnpm --filter @dunno/web dev
+pnpm --filter @calculories/web dev
 ```
 
 #### API (NestJS)
 
 ```powershell
-pnpm --filter @dunno/api start:dev
+pnpm --filter @calculories/api start:dev
 ```
 
 ---
@@ -96,7 +96,7 @@ packages/shared-types
 They are consumed using workspace dependencies:
 
 ```ts
-import type { User } from "@dunno/shared-types";
+import type { User } from "@calculories/shared-types";
 ```
 
 ### Why this matters
