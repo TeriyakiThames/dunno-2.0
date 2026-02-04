@@ -16,7 +16,7 @@ importers:
 
   apps/api:
     dependencies:
-      '@calculories/shared-types':
+      "@calculories/shared-types":
         specifier: workspace:*
         version: link:../../packages/shared-types
       "@nestjs/common":
@@ -107,7 +107,7 @@ importers:
 
   apps/web:
     dependencies:
-      '@calculories/shared-types':
+      "@calculories/shared-types":
         specifier: workspace:*
         version: link:../../packages/shared-types
       next:
