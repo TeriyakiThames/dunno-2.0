@@ -22,7 +22,7 @@ export default function LoginPage() {
 
   if (error) {
     return (
-      <div className="p-4 bg-red-50 border border-red-200 rounded-md text-red-600">
+      <div className="rounded-md border border-red-200 bg-red-50 p-4 text-red-600">
         <p>Error: {error.message}</p>
       </div>
     );

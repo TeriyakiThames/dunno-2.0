@@ -40,10 +40,10 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="max-w-md mx-auto py-12">
-      <div className="text-center mb-8">
+    <div className="mx-auto max-w-md py-12">
+      <div className="mb-8 text-center">
         <h1 className="text-2xl font-semibold">Welcome back</h1>
-        <p className="mt-2 text-muted-foreground">
+        <p className="text-muted-foreground mt-2">
           Login to your account to continue
         </p>
       </div>
