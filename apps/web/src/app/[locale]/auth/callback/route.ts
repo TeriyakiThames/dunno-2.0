@@ -2,11 +2,14 @@ import { NextResponse } from "next/server";
 import createClient from "@/lib/supabase/server";
 
 export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url);
+  const { searchParams, origin, pathname } = new URL(request.url);
 
   // Extract auth code and optional redirect path
   const code = searchParams.get("code");
   const next = searchParams.get("next") ?? "/";
+
+  // extract locale
+  const locale = pathname.split("/")[1];
 
   if (code) {
     const supabase = await createClient();
@@ -21,5 +24,5 @@ export async function GET(request: Request) {
   }
 
   // Redirect to error page if code is missing or exchange fails
-  return NextResponse.redirect(`${origin}/auth/auth-code-error`);
+  return NextResponse.redirect(`${origin}/${locale}/auth/auth-code-error`);
 }

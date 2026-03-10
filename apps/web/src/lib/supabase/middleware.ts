@@ -35,19 +35,25 @@ export default async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const path = request.nextUrl.pathname;
+  const locale = path.split("/")[1];
+  const loginPath = LOGIN_PATH(locale);
 
-  // Redirect unauthenticated users to login, except for auth routes
-  if (!user && !path.startsWith(LOGIN_PATH) && !path.startsWith("/auth")) {
+  // Redirect unauthenticated users to login
+  if (
+    !user &&
+    !path.startsWith(loginPath) &&
+    !path.startsWith(`/${locale}/auth`)
+  ) {
     const url = request.nextUrl.clone();
-    url.pathname = LOGIN_PATH;
+    url.pathname = loginPath;
     url.searchParams.set("next", path);
     return NextResponse.redirect(url);
   }
 
-  // Prevent authenticated users from accessing the login page
-  if (user && path.startsWith(LOGIN_PATH)) {
+  // Prevent logged-in users from opening login page
+  if (user && path.startsWith(loginPath)) {
     const url = request.nextUrl.clone();
-    url.pathname = "/";
+    url.pathname = `/${locale}`;
     return NextResponse.redirect(url);
   }
 

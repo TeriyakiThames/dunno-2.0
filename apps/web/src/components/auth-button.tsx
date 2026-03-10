@@ -13,12 +13,13 @@ export default function AuthButton() {
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
+  const locale = pathname.split("/")[1];
 
-  if (pathname === LOGIN_PATH) return null;
+  if (pathname === LOGIN_PATH(locale)) return null;
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    router.push(LOGIN_PATH);
+    router.push(LOGIN_PATH(locale));
     router.refresh();
   };
 
@@ -34,7 +35,7 @@ export default function AuthButton() {
 
   return (
     <button className="border border-amber-300">
-      <Link href={LOGIN_PATH}>
+      <Link href={LOGIN_PATH(locale)}>
         <span>Login</span>
       </Link>
     </button>
