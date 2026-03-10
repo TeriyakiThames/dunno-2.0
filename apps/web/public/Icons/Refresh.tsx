@@ -1,6 +1,6 @@
 import React from "react";
 
-interface RefreshIconProps extends React.SVGProps<SVGSVGElement> {}
+type RefreshIconProps = React.SVGProps<SVGSVGElement>;
 
 export const RefreshIcon = ({ className, ...props }: RefreshIconProps) => {
   return (

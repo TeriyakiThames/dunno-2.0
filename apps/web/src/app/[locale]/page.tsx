@@ -1,4 +1,4 @@
-import { loadMessages, t } from "@/lib/i18n";
+import { loadMessages } from "@/lib/i18n";
 import LocaleSwitcher from "@/components/Shared/LocaleSwitcher";
 import TopBar from "@/components/Home/TopBar";
 import Streak from "@/components/Home/Streak";
