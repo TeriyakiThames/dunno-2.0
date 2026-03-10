@@ -1,5 +1,5 @@
 import { loadMessages, t } from "@/lib/i18n";
-import LocaleSwitcher from "../components/LocaleSwitcher";
+import LocaleSwitcher from "@/components/LocaleSwitcher";
 
 export default async function Page({
   params,
