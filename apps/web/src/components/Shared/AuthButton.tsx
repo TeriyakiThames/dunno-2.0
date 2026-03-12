@@ -2,13 +2,12 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-
 import createClient from "@/lib/supabase/client";
-
 import { LOGIN_PATH } from "@/constants/common";
 import useUser from "@/hooks/useUser";
+import { Messages, t } from "@/lib/internationalisation/i18n-helpers";
 
-export default function AuthButton() {
+export default function AuthButton({ messages }: { messages: Messages }) {
   const { user, loading } = useUser();
   const pathname = usePathname();
   const router = useRouter();
@@ -28,7 +27,7 @@ export default function AuthButton() {
   if (user) {
     return (
       <button onClick={handleLogout} className="border border-amber-300">
-        <span>Logout</span>
+        {t("logout", messages)}
       </button>
     );
   }
@@ -36,7 +35,7 @@ export default function AuthButton() {
   return (
     <button className="border border-amber-300">
       <Link href={LOGIN_PATH(locale)}>
-        <span>Login</span>
+        <span>{t("login", messages)}</span>
       </Link>
     </button>
   );

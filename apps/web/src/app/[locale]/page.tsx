@@ -1,5 +1,5 @@
-import { loadMessages, t } from "@/lib/i18n";
-import LocaleSwitcher from "@/components/LocaleSwitcher";
+import { loadMessages } from "@/lib/internationalisation/i18n";
+import HomeClient from "../../components/Home/HomeClient";
 
 export default async function Page({
   params,
@@ -8,17 +8,15 @@ export default async function Page({
 }) {
   const { locale } = await params;
 
-  const messages = loadMessages(locale, ["common", "home"]);
-
-  return (
-    <main>
-      <LocaleSwitcher locale={locale} />
-      <h1 className="text-xl">{t("home.title", messages)}</h1>
-      <p className="text-l">{t("home.subtitle", messages)}</p>
-
-      <a className="text-blue-700" href={`/${locale}/test-login`}>
-        {t("home.login", messages)}
-      </a>
-    </main>
+  const homeMessages = loadMessages(
+    locale,
+    ["TopBar", "Streak", "CalorieGoals", "SmartPicks", "SearchBar"],
+    "Home",
   );
+
+  const sharedMessages = loadMessages(locale, ["AuthButton"], "Shared");
+
+  const allMessages = { ...sharedMessages, ...homeMessages };
+
+  return <HomeClient locale={locale} messages={allMessages} />;
 }
