@@ -8,11 +8,15 @@ export default async function Page({
 }) {
   const { locale } = await params;
 
-  const messages = loadMessages(
+  const homeMessages = loadMessages(
     locale,
     ["TopBar", "Streak", "CalorieGoals", "SmartPicks", "SearchBar"],
     "Home",
   );
 
-  return <HomeClient locale={locale} messages={messages} />;
+  const sharedMessages = loadMessages(locale, ["AuthButton"], "Shared");
+
+  const allMessages = { ...sharedMessages, ...homeMessages };
+
+  return <HomeClient locale={locale} messages={allMessages} />;
 }

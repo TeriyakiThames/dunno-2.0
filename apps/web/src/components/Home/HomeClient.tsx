@@ -1,7 +1,6 @@
 "use client";
 
 import useUser from "@/hooks/useUser";
-
 import LocaleSwitcher, { Locale } from "@/components/Shared/LocaleSwitcher";
 import AuthButton from "@/components/Shared/AuthButton";
 import TopBar from "@/components/Home/TopBar";
@@ -10,7 +9,6 @@ import CalorieGoals from "@/components/Home/CalorieGoals";
 import SmartPicks from "@/components/Home/SmartPicks";
 import SearchBar from "@/components/Home/SearchBar";
 import PageBottom from "@/components/Shared/PageBottom";
-
 import { Messages } from "@/lib/internationalisation/i18n-helpers";
 
 const MOCK_RECOMMENDED_MEALS = [
@@ -69,7 +67,7 @@ export default function HomeClient({
     <main>
       <div className="flex items-center justify-center gap-10 border border-black bg-white">
         <LocaleSwitcher locale={locale} />
-        <AuthButton />
+        <AuthButton messages={messages} />
       </div>
       {user ? (
         <>
