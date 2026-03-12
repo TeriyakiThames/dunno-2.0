@@ -1,4 +1,4 @@
-import { loadMessages } from "@/lib/i18n";
+import { loadMessages, t } from "@/lib/i18n";
 import LocaleSwitcher from "@/components/Shared/LocaleSwitcher";
 import TopBar from "@/components/Home/TopBar";
 import Streak from "@/components/Home/Streak";
@@ -42,13 +42,21 @@ export default async function Page({
   const { locale } = await params;
   const messages = loadMessages(
     locale,
-    ["TopBar", "Streak", "CalorieGoals", "SmartPicks", "SearchBar"],
+    ["TopBar", "Streak", "CalorieGoals", "SmartPicks", "SearchBar", "Home"],
     "Home",
   );
 
   return (
     <main>
-      <LocaleSwitcher locale={locale} />
+      <div className="flex items-center justify-center gap-10 border border-black bg-white">
+        <LocaleSwitcher locale={locale} />
+        <a
+          className="w-17.5 text-center text-blue-700"
+          href={`/${locale}/test-login`}
+        >
+          {t("login", messages)}
+        </a>
+      </div>
       <TopBar name={"Thames"} messages={messages} />
       <Streak date={5} messages={messages} />
       <CalorieGoals
@@ -60,7 +68,6 @@ export default async function Page({
       />
       <SmartPicks meals={MOCK_RECOMMENDED_MEALS} messages={messages} />
       <SearchBar messages={messages} />
-
       <PageBottom />
     </main>
   );
