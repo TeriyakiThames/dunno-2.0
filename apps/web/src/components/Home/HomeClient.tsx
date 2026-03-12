@@ -3,7 +3,7 @@
 import useUser from "@/hooks/useUser";
 
 import LocaleSwitcher, { Locale } from "@/components/Shared/LocaleSwitcher";
-import AuthButton from "@/components/Shared/AuthenticationButton";
+import AuthButton from "@/components/Shared/AuthButton";
 import TopBar from "@/components/Home/TopBar";
 import Streak from "@/components/Home/Streak";
 import CalorieGoals from "@/components/Home/CalorieGoals";

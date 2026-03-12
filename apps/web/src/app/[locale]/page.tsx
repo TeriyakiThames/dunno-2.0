@@ -10,7 +10,7 @@ export default async function Page({
 
   const messages = loadMessages(
     locale,
-    ["TopBar", "Streak", "CalorieGoals", "SmartPicks", "SearchBar", "Home"],
+    ["TopBar", "Streak", "CalorieGoals", "SmartPicks", "SearchBar"],
     "Home",
   );
 
