@@ -1,5 +1,5 @@
 import ProgressBar from "../Shared/ProgressBar";
-import { t, Messages } from "@/lib/i18n";
+import { t, Messages } from "@/lib/internationalisation/i18n-helpers";
 
 interface CalorieGoalsProps {
   calories: number;

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { t, Messages } from "@/lib/i18n";
+import { t, Messages } from "@/lib/internationalisation/i18n-helpers";
 
 interface StreakProps {
   date?: number;

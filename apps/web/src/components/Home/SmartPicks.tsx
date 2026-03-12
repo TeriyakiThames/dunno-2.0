@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { RefreshIcon } from "../../../public/Icons/Refresh";
-import { t, Messages } from "@/lib/i18n";
+import { t, Messages } from "@/lib/internationalisation/i18n-helpers";
 
 interface Meal {
   restaurant: string;
