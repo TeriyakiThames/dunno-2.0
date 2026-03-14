@@ -46,10 +46,10 @@ export const userTable = pgTable(
     gluten_free_default: boolean().default(false).notNull(),
 
     goal: goalEnum().default("balanced").notNull(),
-    target_calorie: real().notNull(),
-    target_fat: real().notNull(),
-    target_protein: real().notNull(),
-    target_carbs: real().notNull(),
+    target_calorie: real(),
+    target_fat: real(),
+    target_protein: real(),
+    target_carbs: real(),
   },
   (table) => [
     check(
@@ -67,12 +67,12 @@ export const dietProfileTable = pgTable("diet_profile", {
     .defaultNow()
     .notNull()
     .$onUpdateFn(() => new Date()),
-  calorie_intake: real().notNull(),
-  carbs_intake: real().notNull(),
-  protein_intake: real().notNull(),
-  fat_intake: real().notNull(),
-  alcohol_intake: real().notNull(),
-  streak: integer().notNull(),
+  calorie_intake: real().default(0).notNull(),
+  carbs_intake: real().default(0).notNull(),
+  protein_intake: real().default(0).notNull(),
+  fat_intake: real().default(0).notNull(),
+  alcohol_intake: real().default(0).notNull(),
+  streak: integer().default(0).notNull(),
 }).enableRLS();
 
 export const restaurantTable = pgTable("restaurant", {
@@ -132,10 +132,10 @@ export const mealHistoryTable = pgTable("meal_history", {
     .defaultNow()
     .notNull(),
 
-  edited_carbs: real().notNull(),
-  edited_protein: real().notNull(),
-  edited_fat: real().notNull(),
-  edited_alcohol: real().notNull(),
+  edited_carbs: real().default(0).notNull(),
+  edited_protein: real().default(0).notNull(),
+  edited_fat: real().default(0).notNull(),
+  edited_alcohol: real().default(0).notNull(),
 }).enableRLS();
 
 export const dishComponentMap = pgTable("dish_component_map", {
