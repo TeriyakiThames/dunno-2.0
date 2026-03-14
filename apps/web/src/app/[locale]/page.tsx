@@ -14,7 +14,11 @@ export default async function Page({
     "Home",
   );
 
-  const sharedMessages = loadMessages(locale, ["AuthButton"], "Shared");
+  const sharedMessages = loadMessages(
+    locale,
+    ["AuthButton", "DeleteAccountButton"],
+    "Shared",
+  );
 
   const allMessages = { ...sharedMessages, ...homeMessages };
 
