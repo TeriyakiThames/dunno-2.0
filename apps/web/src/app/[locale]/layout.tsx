@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { notFound } from "next/navigation";
 import "@/styles/globals.css";
-import { Locale } from "@/components/Shared/LocaleSwitcher";
+import { Locale } from "@calculories/shared-types";
 
 const locales = ["en", "th"] as const;
 export const dynamicParams = false;

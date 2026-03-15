@@ -1,10 +1,10 @@
 import "server-only";
 import fs from "fs";
 import path from "path";
-import { Messages } from "./i18n-helpers";
+import { Locale, Messages } from "@calculories/shared-types";
 
 export function loadMessages(
-  locale: "en" | "th",
+  locale: Locale,
   namespaces: string[] = [],
   subDir: string = "",
 ): Messages {

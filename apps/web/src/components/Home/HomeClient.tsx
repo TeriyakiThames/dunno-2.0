@@ -1,7 +1,7 @@
 "use client";
 
 import useUser from "@/hooks/useUser";
-import LocaleSwitcher, { Locale } from "@/components/Shared/LocaleSwitcher";
+import LocaleSwitcher from "@/components/Shared/LocaleSwitcher";
 import AuthButton from "@/components/Shared/AuthButton";
 import TopBar from "@/components/Home/TopBar";
 import Streak from "@/components/Home/Streak";
@@ -9,7 +9,7 @@ import CalorieGoals from "@/components/Home/CalorieGoals";
 import SmartPicks from "@/components/Home/SmartPicks";
 import SearchBar from "@/components/Home/SearchBar";
 import PageBottom from "@/components/Shared/PageBottom";
-import { Messages } from "@/lib/internationalisation/i18n-helpers";
+import { Locale, Messages } from "@calculories/shared-types";
 import DeleteAccountButton from "@/components/Shared/DeleteAccountButton";
 
 const MOCK_RECOMMENDED_MEALS = [
