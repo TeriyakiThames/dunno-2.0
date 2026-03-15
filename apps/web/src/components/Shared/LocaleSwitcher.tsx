@@ -3,11 +3,10 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { Locale } from "@calculories/shared-types";
 
-export type Locale = "en" | "th";
-
-export type LocaleSwitcherProps = {
-  locale: "en" | "th";
+type LocaleSwitcherProps = {
+  locale: Locale;
   className?: string;
 };
 

@@ -3,6 +3,5 @@ packages:
   - packages/*
 
 onlyBuiltDependencies:
-  - "@nestjs/core"
   - sharp
   - unrs-resolver

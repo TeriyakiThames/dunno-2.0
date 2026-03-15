@@ -1,4 +1,4 @@
-import { Locale } from "@/components/Shared/LocaleSwitcher";
+import { Locale } from "@calculories/shared-types";
 import { LOGIN_PATH } from "@/constants/common";
 import Link from "next/link";
 

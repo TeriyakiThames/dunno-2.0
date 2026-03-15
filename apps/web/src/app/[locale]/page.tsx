@@ -1,6 +1,6 @@
 import { loadMessages } from "@/lib/internationalisation/i18n";
 import HomeClient from "../../components/Home/HomeClient";
-import { Locale } from "@/components/Shared/LocaleSwitcher";
+import { Locale } from "@calculories/shared-types";
 
 export default async function Page({
   params,

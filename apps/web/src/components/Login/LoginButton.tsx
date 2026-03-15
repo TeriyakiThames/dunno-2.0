@@ -4,12 +4,13 @@ import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import createClient from "@/lib/supabase/client";
 import { t, Messages } from "@/lib/internationalisation/i18n-helpers";
+import { Locale } from "@calculories/shared-types";
 
 export default function LoginButton({
   locale,
   messages,
 }: {
-  locale: "en" | "th";
+  locale: Locale;
   messages: Messages;
 }) {
   const [isGoogleLoading, setIsGoogleLoading] = useState<boolean>(false);
