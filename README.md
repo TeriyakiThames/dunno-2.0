@@ -27,7 +27,7 @@ calculories/
 - **Package Manager**: pnpm (workspace-based)
 - **Monorepo Tooling**: Turborepo
 - **Frontend**: Next.js + React
-- **Backend**: Next.js 
+- **Backend**: Next.js
 - **Language**: TypeScript
 
 ---
