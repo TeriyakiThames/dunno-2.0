@@ -1,12 +1,19 @@
 import Image from "next/image";
-import { t, Messages } from "@/lib/internationalisation/i18n-helpers";
+import { t } from "@/lib/internationalisation/i18n-helpers";
+import { DietProfile, Messages } from "@calculories/shared-types";
 
 interface StreakProps {
-  date?: number;
+  dietProfile: DietProfile;
   messages: Messages;
 }
 
-const StreakHeader = ({ date = 0, messages }: StreakProps) => (
+const StreakHeader = ({
+  streak,
+  messages,
+}: {
+  streak: number;
+  messages: Messages;
+}) => (
   <span className="mt-1 flex items-center gap-1">
     <Image
       src="/Home/HoneyComb.svg"
@@ -15,14 +22,20 @@ const StreakHeader = ({ date = 0, messages }: StreakProps) => (
       height={24}
     />
     <h1 className="text-l text-text font-bold">
-      {date} {t("streak", messages)}
+      {streak} {t("streak", messages)}
     </h1>
   </span>
 );
 
-const StreakBody = ({ date = 0, messages }: StreakProps) => {
+const StreakBody = ({
+  streak,
+  messages,
+}: {
+  streak: number;
+  messages: Messages;
+}) => {
   const dayKeys = ["day1", "day2", "day3", "day4", "day5", "day6", "day7"];
-  const filledCount = date % 7 === 0 && date > 0 ? 7 : date % 7;
+  const filledCount = streak % 7 === 0 && streak > 0 ? 7 : streak % 7;
 
   return (
     <span className="my-3.5 flex justify-between">
@@ -60,11 +73,13 @@ const StreakBody = ({ date = 0, messages }: StreakProps) => {
   );
 };
 
-export default function Streak({ date = 0, messages }: StreakProps) {
+export default function Streak({ dietProfile, messages }: StreakProps) {
+  const streak = dietProfile?.streak || 0;
+
   return (
     <div className="mx-auto flex w-[354.12px] flex-col gap-3 rounded-xl border-[0.5] border-[#bebdbb] bg-white px-4 py-2 shadow-[0px_2.38px_2.38px_0px_rgba(0,0,0,0.25)]">
-      <StreakHeader date={date} messages={messages} />
-      <StreakBody date={date} messages={messages} />
+      <StreakHeader streak={streak} messages={messages} />
+      <StreakBody streak={streak} messages={messages} />
     </div>
   );
 }

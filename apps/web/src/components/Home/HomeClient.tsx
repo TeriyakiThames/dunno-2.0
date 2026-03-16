@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import useUser from "@/hooks/useUser";
 import LocaleSwitcher from "@/components/Shared/LocaleSwitcher";
 import AuthButton from "@/components/Shared/AuthButton";
@@ -9,33 +10,39 @@ import CalorieGoals from "@/components/Home/CalorieGoals";
 import SmartPicks from "@/components/Home/SmartPicks";
 import SearchBar from "@/components/Home/SearchBar";
 import PageBottom from "@/components/Shared/PageBottom";
-import { Locale, Messages } from "@calculories/shared-types";
+import {
+  Locale,
+  Messages,
+  GetUserResponse,
+  Dish,
+} from "@calculories/shared-types";
 import DeleteAccountButton from "@/components/Shared/DeleteAccountButton";
+import { MockAPI } from "@/mocks/mockAPI";
 
-const MOCK_RECOMMENDED_MEALS = [
+const MOCK_RECOMMENDED_DISHES: Dish[] = [
   {
-    restaurant: "Green Eats",
-    menu: "Grilled Salmon",
-    calories: 450,
-    distance: 10,
+    id: 1,
+    name_en: "Grilled Salmon",
+    name_th: "แซลมอนย่าง",
     price: 210,
-    imageUrl: "/Home/UnknownMeal.svg",
+    calorie: 450,
+    restaurant: { id: 101, name_en: "Green Eats", name_th: "กรีนอีทส์" },
   },
   {
-    restaurant: "Healthy Hub",
-    menu: "Quinoa Buddha Bowl",
-    calories: 380,
-    distance: 1.2,
+    id: 2,
+    name_en: "Quinoa Buddha Bowl",
+    name_th: "ควินัวบุดด้าโบลว์",
     price: 185,
-    imageUrl: "/Home/UnknownMeal.svg",
+    calorie: 380,
+    restaurant: { id: 102, name_en: "Healthy Hub", name_th: "เฮลตี้ฮับ" },
   },
   {
-    restaurant: "Pasta Fresh",
-    menu: "Zucchini Pesto Pasta",
-    calories: 520,
-    distance: 3.5,
+    id: 3,
+    name_en: "Zucchini Pesto Pasta",
+    name_th: "พาสต้าซุกกินีเปสโต",
     price: 240,
-    imageUrl: "/Home/UnknownMeal.svg",
+    calorie: 520,
+    restaurant: { id: 103, name_en: "Pasta Fresh", name_th: "พาสต้าเฟรช" },
   },
 ];
 
@@ -46,20 +53,41 @@ export default function HomeClient({
   locale: Locale;
   messages: Messages;
 }) {
-  const { loading, error, user } = useUser();
+  const { loading: authLoading, error: authError, user: authUser } = useUser();
 
-  if (loading) {
+  const [appUser, setAppUser] = useState<GetUserResponse | null>(null);
+  const [apiLoading, setApiLoading] = useState(false);
+
+  useEffect(() => {
+    if (authUser?.id) {
+      const fetchDashboardData = async () => {
+        setApiLoading(true);
+        try {
+          const userData = await MockAPI.getUserProfile(authUser.id);
+          setAppUser(userData);
+        } catch (err) {
+          console.error("Failed to fetch user data", err);
+        } finally {
+          setApiLoading(false);
+        }
+      };
+
+      fetchDashboardData();
+    }
+  }, [authUser?.id]);
+
+  if (authLoading || apiLoading) {
     return (
-      <div className="flex items-center space-x-2 text-gray-500">
+      <div className="flex items-center space-x-2 p-4 text-gray-500">
         <span>Loading user data...</span>
       </div>
     );
   }
 
-  if (error) {
+  if (authError) {
     return (
-      <div className="rounded-md border border-red-200 bg-red-50 p-4 text-red-600">
-        <p>Error: {error.message}</p>
+      <div className="m-4 rounded-md border border-red-200 bg-red-50 p-4 text-red-600">
+        <p>Error: {authError.message}</p>
       </div>
     );
   }
@@ -71,29 +99,35 @@ export default function HomeClient({
         <AuthButton messages={messages} />
         <DeleteAccountButton messages={messages} />
       </div>
-      {user ? (
-        <>
-          <TopBar
-            name={user.user_metadata.name}
-            imageURL={
-              user.user_metadata?.avatar_url || "/Home/MockProfilePicture.svg"
-            }
-            messages={messages}
-          />
-        </>
+
+      {authUser ? (
+        <TopBar
+          name={authUser.user_metadata?.name || appUser?.username || "User"}
+          imageURL={
+            authUser.user_metadata?.avatar_url || "/Home/MockProfilePicture.svg"
+          }
+          messages={messages}
+        />
       ) : (
         <TopBar name={"User"} messages={messages} />
       )}
 
-      <Streak date={5} messages={messages} />
-      <CalorieGoals
-        calories={1200}
-        protein={85}
-        carbs={145}
-        fats={45}
-        messages={messages}
-      />
-      <SmartPicks meals={MOCK_RECOMMENDED_MEALS} messages={messages} />
+      {appUser && (
+        <>
+          <Streak dietProfile={appUser.dietProfile} messages={messages} />
+          <CalorieGoals
+            user={appUser}
+            dietProfile={appUser.dietProfile}
+            messages={messages}
+          />
+          <SmartPicks
+            dishes={MOCK_RECOMMENDED_DISHES}
+            messages={messages}
+            locale={locale}
+          />
+        </>
+      )}
+
       <SearchBar messages={messages} />
       <PageBottom />
     </main>
