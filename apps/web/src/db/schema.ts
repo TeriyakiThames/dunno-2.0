@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   pgTable,
   pgEnum,
@@ -11,7 +12,7 @@ import {
   real,
   decimal,
 } from "drizzle-orm/pg-core";
-import { sql, relations } from "drizzle-orm";
+import { sql, defineRelations } from "drizzle-orm";
 
 const sexEnum = pgEnum("sex", ["M", "F"]);
 const goalEnum = pgEnum("goal", [
@@ -148,76 +149,150 @@ export const dishComponentMap = pgTable("dish_component_map", {
   ratio: real().default(1).notNull(),
 }).enableRLS();
 
-// Relations =============================
+// Relations for new Drizzle version (v1.0.0beta) =============================
 
-export const usersRelations = relations(userTable, ({ one, many }) => ({
-  dietProfile: one(dietProfileTable),
-  mealHistory: many(mealHistoryTable),
-}));
-
-export const dishRelations = relations(dishTable, ({ one, many }) => ({
-  mealHistory: many(mealHistoryTable),
-  restaurant: one(restaurantTable, {
-    fields: [dishTable.res_id],
-    references: [restaurantTable.id],
-  }),
-  dishComponentMap: many(dishComponentMap),
-}));
-
-export const restaurantRelations = relations(restaurantTable, ({ many }) => ({
-  dishTable: many(dishTable),
-  restaurantType: many(restaurantTypeMap),
-}));
-
-export const restaurantTypeRelations = relations(
-  restaurantTypeTable,
-  ({ many }) => ({
-    restaurantType: many(restaurantTypeMap),
+export const userDietProfileRelation = defineRelations(
+  { userTable, dietProfileTable },
+  (r: any) => ({
+    userTable: {
+      dietProfile: r.one.dietProfileTable({
+        from: r.userTable.id,
+        to: r.dietProfileTable.user_id,
+      }),
+    },
   }),
 );
 
-export const componentRelations = relations(componentTable, ({ many }) => ({
-  dishComponentMap: many(dishComponentMap),
-}));
-
-export const mealHistoryRelations = relations(mealHistoryTable, ({ one }) => ({
-  user: one(userTable, {
-    fields: [mealHistoryTable.user_id],
-    references: [userTable.id],
-  }),
-  dish: one(dishTable, {
-    fields: [mealHistoryTable.dish_id],
-    references: [dishTable.id],
-  }),
-}));
-
-export const dishComponentMapRelations = relations(
-  dishComponentMap,
-  ({ one }) => ({
-    dish: one(dishTable, {
-      fields: [dishComponentMap.dish_id],
-      references: [dishTable.id],
-    }),
-    component: one(componentTable, {
-      fields: [dishComponentMap.component_id],
-      references: [componentTable.id],
-    }),
+export const restaurantDishRelation = defineRelations(
+  { restaurantTable, dishTable },
+  (r: any) => ({
+    dishTable: {
+      restaurant: r.one.restaurantTable({
+        from: r.dishTable.res_id,
+        to: r.restaurantTable.id,
+      }),
+    },
+    restaurantTable: {
+      dish: r.many.dishTable(),
+    },
   }),
 );
 
-export const restaurantTypeMapRelations = relations(
-  restaurantTypeMap,
-  ({ one }) => ({
-    restaurant: one(restaurantTable, {
-      fields: [restaurantTypeMap.res_id],
-      references: [restaurantTable.id],
-    }),
-    restaurantType: one(restaurantTypeTable, {
-      fields: [restaurantTypeMap.type_id],
-      references: [restaurantTypeTable.id],
-    }),
+export const dishComponentRelations = defineRelations(
+  { dishTable, componentTable, dishComponentMap },
+  (r: any) => ({
+    dishTable: {
+      component: r.many.componentTable({
+        from: r.dishTable.id.through(r.dishComponentMap.dish_id),
+        to: r.componentTable.id.through(r.dishComponentMap.component_id),
+      }),
+    },
+    component: {
+      dish: r.many.dishTable(),
+    },
   }),
 );
+
+export const userDishRelation = defineRelations(
+  { userTable, dishTable, mealHistoryTable },
+  (r: any) => ({
+    dishTable: {
+      user: r.many.userTable({
+        from: r.dishTable.id.through(r.mealHistoryTable.dish_id),
+        to: r.userTable.id.through(r.mealHistoryTable.user_id),
+      }),
+    },
+    user: {
+      dish: r.many.dishTable(),
+    },
+  }),
+);
+
+export const restaurantTypeRelations = defineRelations(
+  { restaurantTable, restaurantTypeTable, restaurantTypeMap },
+  (r: any) => ({
+    restaurantTable: {
+      restaurantType: r.many.restaurantTypeTable({
+        from: r.restaurantTable.id.through(r.restaurantTypeMap.res_id),
+        to: r.restaurantTypeTable.id.through(r.restaurantTypeMap.type_id),
+      }),
+    },
+    restaurantType: {
+      restaurant: r.many.restaurantTable(),
+    },
+  }),
+);
+
+// Relations for old Drizzle version (v0.37) ==========================================
+
+// export const usersRelations = relations(userTable, ({ one, many }) => ({
+// dietProfile: one(dietProfileTable),
+// mealHistory: many(mealHistoryTable),
+// }));
+
+// export const dishRelations = relations(dishTable, ({ one, many }) => ({
+// mealHistory: many(mealHistoryTable),
+// restaurant: one(restaurantTable, {
+//   fields: [dishTable.res_id],
+//   references: [restaurantTable.id],
+// }),
+// dishComponentMap: many(dishComponentMap),
+// }));
+
+// export const restaurantRelations = relations(restaurantTable, ({ many }) => ({
+// dishTable: many(dishTable),
+// restaurantType: many(restaurantTypeMap),
+// }));
+
+// export const restaurantTypeRelations = relations(
+//   restaurantTypeTable,
+//   ({ many }) => ({
+//     restaurantType: many(restaurantTypeMap),
+//   }),
+// );
+
+// export const componentRelations = relations(componentTable, ({ many }) => ({
+// dishComponentMap: many(dishComponentMap),
+// }));
+
+// export const mealHistoryRelations = relations(mealHistoryTable, ({ one }) => ({
+//   user: one(userTable, {
+//     fields: [mealHistoryTable.user_id],
+//     references: [userTable.id],
+//   }),
+//   dish: one(dishTable, {
+//     fields: [mealHistoryTable.dish_id],
+//     references: [dishTable.id],
+//   }),
+// }));
+
+// export const dishComponentMapRelations = relations(
+//   dishComponentMap,
+//   ({ one }) => ({
+//     dish: one(dishTable, {
+//       fields: [dishComponentMap.dish_id],
+//       references: [dishTable.id],
+//     }),
+//     component: one(componentTable, {
+//       fields: [dishComponentMap.component_id],
+//       references: [componentTable.id],
+//     }),
+//   }),
+// );
+
+// export const restaurantTypeMapRelations = relations(
+//   restaurantTypeMap,
+//   ({ one }) => ({
+//     restaurant: one(restaurantTable, {
+//       fields: [restaurantTypeMap.res_id],
+//       references: [restaurantTable.id],
+//     }),
+//     restaurantType: one(restaurantTypeTable, {
+//       fields: [restaurantTypeMap.type_id],
+//       references: [restaurantTypeTable.id],
+//     }),
+//   }),
+// );
 
 // Type Inference =============================
 
