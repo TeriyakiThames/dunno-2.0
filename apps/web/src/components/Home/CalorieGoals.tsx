@@ -31,8 +31,8 @@ export default function CalorieGoals({
         current={calories}
         max={caloriesMax}
         unit="kcal"
-        fillColor="bg-[#4AAE9B]"
-        trackColor="bg-[#cae1dd]"
+        fillColor="bg-green-100"
+        trackColor="bg-green-20"
         isMain
       />
 
@@ -42,8 +42,8 @@ export default function CalorieGoals({
           current={protein}
           max={proteinMax}
           unit="g"
-          fillColor="bg-secondary-orange-1"
-          trackColor="bg-[#edf3f2]"
+          fillColor="bg-orange-100"
+          trackColor="bg-orange-20"
         />
 
         <ProgressBar
@@ -51,8 +51,8 @@ export default function CalorieGoals({
           current={carbs}
           max={carbsMax}
           unit="g"
-          fillColor="bg-secondary-orange-1"
-          trackColor="bg-[#edf3f2]"
+          fillColor="bg-orange-100"
+          trackColor="bg-orange-20"
         />
 
         <ProgressBar
@@ -60,8 +60,8 @@ export default function CalorieGoals({
           current={fats}
           max={fatsMax}
           unit="g"
-          fillColor="bg-secondary-orange-1"
-          trackColor="bg-[#edf3f2]"
+          fillColor="bg-orange-100"
+          trackColor="bg-orange-20"
         />
       </div>
     </div>

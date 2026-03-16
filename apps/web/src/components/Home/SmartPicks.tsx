@@ -22,7 +22,7 @@ const Header = ({ messages }: { messages: Messages }) => (
 
     {/* TODO: Add functionality to refresh icon when backend is complete */}
     <button
-      className="text-primary-green-1 flex items-center gap-1 hover:text-gray-400"
+      className="flex items-center gap-1 text-green-100 hover:text-gray-400"
       aria-label="Refresh"
     >
       <RefreshIcon />
@@ -39,7 +39,7 @@ const MealCard = ({
   price = 0,
   imageUrl = "/Home/UnknownMeal.svg",
 }: Meal) => (
-  <div className="flex h-24 items-center justify-between gap-10.75 rounded-xl border-[0.5px] border-[#4AAE9B] bg-white px-4 py-2 shadow-[0_2.38px_2.38px_0_#CAE1DD]">
+  <div className="flex h-24 items-center justify-between gap-10.75 rounded-xl border-[0.5px] border-green-100 bg-white px-4 py-2 shadow-[0_2.38px_2.38px_0_#CAE1DD]">
     <div className="flex gap-4">
       {/* Image */}
       <Image
@@ -52,7 +52,7 @@ const MealCard = ({
 
       {/* Restaurant information */}
       <div className="flex w-42.5 flex-col gap-1">
-        <h3 className="text-primary-green-1 w-42.5 translate-y-1 truncate text-xs font-bold">
+        <h3 className="w-42.5 translate-y-1 truncate text-xs font-bold text-green-100">
           {restaurant}
         </h3>
         <h2 className="w-42.5 truncate font-bold">{menu}</h2>
