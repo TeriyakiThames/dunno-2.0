@@ -1,23 +1,18 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
 import useUser from "@/hooks/useUser";
+import useSWR from "swr";
 import LocaleSwitcher from "@/components/Shared/LocaleSwitcher";
 import AuthButton from "@/components/Shared/AuthButton";
 import TopBar from "@/components/Home/TopBar";
 import Streak from "@/components/Home/Streak";
 import CalorieGoals from "@/components/Home/CalorieGoals";
-import SmartPicks from "@/components/Home/SmartPicks";
+import SmartPicks from "@/components/Home/SmartPicks/SmartPicks";
 import SearchBar from "@/components/Home/SearchBar";
 import PageBottom from "@/components/Shared/PageBottom";
 import DeleteAccountButton from "@/components/Shared/DeleteAccountButton";
 import { MockAPI } from "@/mocks/mockAPI";
-import {
-  Locale,
-  Messages,
-  GetUserResponse,
-  Dish,
-} from "@calculories/shared-types";
+import { Locale, Messages } from "@calculories/shared-types";
 
 export default function HomeClient({
   locale,
@@ -28,41 +23,18 @@ export default function HomeClient({
 }) {
   const { loading: authLoading, error: authError, user: authUser } = useUser();
 
-  const [appUser, setAppUser] = useState<GetUserResponse | null>(null);
-  const [apiLoading, setApiLoading] = useState(false);
+  const { data: appUser, isLoading: apiLoading } = useSWR(
+    authUser?.id ? `user-profile-${authUser.id}` : null,
+    () => MockAPI.getUserProfile(authUser!.id as string),
+  );
 
-  const [recommendedDishes, setRecommendedDishes] = useState<Dish[]>([]);
-
-  const fetchSmartPicks = useCallback(async () => {
-    if (!authUser?.id) return;
-
-    try {
-      const fetchedDishes = await MockAPI.getRecommendedDishes(authUser.id);
-      setRecommendedDishes(fetchedDishes);
-    } catch (err) {
-      console.error("Failed to fetch SmartPicks", err);
-    }
-  }, [authUser?.id]);
-
-  useEffect(() => {
-    if (authUser?.id) {
-      const fetchDashboardData = async () => {
-        setApiLoading(true);
-        try {
-          const userData = await MockAPI.getUserProfile(authUser.id);
-          setAppUser(userData);
-
-          await fetchSmartPicks();
-        } catch (err) {
-          console.error("Failed to fetch dashboard data", err);
-        } finally {
-          setApiLoading(false);
-        }
-      };
-
-      fetchDashboardData();
-    }
-  }, [authUser?.id, fetchSmartPicks]);
+  const {
+    data: recommendedDishes = [],
+    mutate: refreshSmartPicks,
+    isValidating: isRefreshingPicks,
+  } = useSWR(authUser?.id ? `smart-picks-${authUser.id}` : null, () =>
+    MockAPI.getRecommendedDishes(authUser!.id as string),
+  );
 
   if (authLoading || apiLoading) {
     return (
@@ -112,7 +84,8 @@ export default function HomeClient({
             dishes={recommendedDishes}
             messages={messages}
             locale={locale}
-            onRefresh={fetchSmartPicks}
+            onRefresh={() => refreshSmartPicks()}
+            isRefreshing={isRefreshingPicks}
           />
         </>
       )}
