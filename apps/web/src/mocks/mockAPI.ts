@@ -12,10 +12,6 @@ import {
   DeleteMealHistoryRequest,
 } from "@calculories/shared-types";
 
-// ------------------------------------------------------------------
-// 1. Mock Entities
-// ------------------------------------------------------------------
-
 export const mockDietProfile: DietProfile = {
   last_updated: new Date().toISOString(),
   calorie_intake: 1450,
@@ -35,7 +31,7 @@ export const mockUser: User = {
   weight: 70.5,
   height: 175,
   created_at: "2026-01-10T08:00:00Z",
-  activity_level: 1.55, // e.g., moderately active
+  activity_level: 1.55,
   vegetarian_default: false,
   target_protein: 150,
   target_carbs: 220,
@@ -77,7 +73,7 @@ export const mockMealHistoryList: MealHistory[] = [
     id: 1001,
     user_id: mockUser.id,
     dish_id: mockDish.id,
-    at: new Date(Date.now() - 1000 * 60 * 60 * 4).toISOString(), // 4 hours ago
+    at: new Date(Date.now() - 1000 * 60 * 60 * 4).toISOString(),
     edited_fat: 35,
     edited_protein: 30,
     edited_carbs: 60,
@@ -116,26 +112,23 @@ const MOCK_RECOMMENDED_DISHES = [
     calorie: 520,
     restaurant: { id: 103, name_en: "Pasta Fresh", name_th: "พาสต้าเฟรช" },
   },
-];
-
-// ------------------------------------------------------------------
-// 2. Mock API Responses
-// ------------------------------------------------------------------
+] as Dish[];
 
 export const MockAPI = {
   // GET /api/user/:uid
   getUserProfile: async (uid: string): Promise<GetUserResponse> => {
-    // Simulating network delay
+    console.log(`MockAPI: Fetching user profile.`);
     await new Promise((resolve) => setTimeout(resolve, 500));
     return {
       ...mockUser,
-      id: uid, // echo back the requested ID
+      id: uid,
       dietProfile: mockDietProfile,
     };
   },
 
   // GET /api/user/:uid/meal-history
   getMealHistory: async (uid: string): Promise<MealHistory[]> => {
+    console.log(`MockAPI: Fetching meal history.`);
     await new Promise((resolve) => setTimeout(resolve, 500));
     return mockMealHistoryList.filter(
       (meal) => meal.user_id === mockUser.id || uid,
@@ -144,6 +137,7 @@ export const MockAPI = {
 
   // GET /api/dishes/:id
   getDishInfo: async (id: number): Promise<Dish> => {
+    console.log(`MockAPI: Fetching dish info for id: ${id}`);
     await new Promise((resolve) => setTimeout(resolve, 300));
     return {
       ...mockDish,
@@ -155,6 +149,7 @@ export const MockAPI = {
   getRestaurantInfo: async (
     id: number,
   ): Promise<Restaurant & { dishes: Dish[] }> => {
+    console.log(`MockAPI: Fetching restaurant info for id: ${id}`);
     await new Promise((resolve) => setTimeout(resolve, 300));
     return {
       ...mockRestaurant,
@@ -162,63 +157,57 @@ export const MockAPI = {
       dishes: [mockDish],
     };
   },
+
   updateUserProfile: async (
     uid: string,
     data: UpdateUserRequest,
   ): Promise<User> => {
-    await new Promise((resolve) => setTimeout(resolve, 600)); // Simulate latency
-    console.log(`Mocking user update for ${uid}:`, data);
+    console.log(`MockAPI: Updating user profile.`, data);
+    await new Promise((resolve) => setTimeout(resolve, 600));
     return {
       ...mockUser,
-      ...data, // Merge the new data over the mock user
+      ...data,
       id: uid,
     };
   },
 
-  // PATCH /api/user/:uid/diet-profile
   updateDietProfile: async (
     uid: string,
     data: UpdateDietProfileRequest,
   ): Promise<DietProfile> => {
+    console.log(`MockAPI: Updating diet profile.`, data);
     await new Promise((resolve) => setTimeout(resolve, 400));
-    console.log(`Mocking diet profile update for ${uid}:`, data);
     return {
       ...mockDietProfile,
       ...data,
-      last_updated: new Date().toISOString(), // Automatically update timestamp
+      last_updated: new Date().toISOString(),
     };
   },
 
-  // POST /api/user/:uid/meal-history
   addMealHistory: async (
     uid: string,
     data: CreateMealHistoryRequest,
   ): Promise<MealHistory> => {
+    console.log(`MockAPI: Adding meal history.`, data);
     await new Promise((resolve) => setTimeout(resolve, 800));
-    console.log(`Mocking adding meal for ${uid}:`, data);
-
-    // Create a fake new record with a random ID
     const newMeal: MealHistory = {
       ...data,
       id: Math.floor(Math.random() * 10000) + 2000,
       user_id: uid,
-    };
-
+    } as MealHistory;
     return newMeal;
   },
 
-  // PATCH /api/user/:uid/meal-history/:mid
   updateMealHistory: async (
     uid: string,
     mid: number,
     data: UpdateMealHistoryRequest,
   ): Promise<MealHistory> => {
+    console.log(`MockAPI: Updating meal history ${mid}.`, data);
     await new Promise((resolve) => setTimeout(resolve, 500));
-    console.log(`Mocking updating meal ${mid} for ${uid}:`, data);
-
     return {
-      ...mockMealHistoryList[0], // Grab a base mock meal
-      ...data, // Apply the updates
+      ...mockMealHistoryList[0],
+      ...data,
       id: mid,
       user_id: uid,
     };
@@ -229,8 +218,8 @@ export const MockAPI = {
     uid: string,
     mid: number,
   ): Promise<{ success: boolean; id: number }> => {
+    console.log(`MockAPI: Deleting meal history ${mid}.`);
     await new Promise((resolve) => setTimeout(resolve, 400));
-    console.log(`Mocking deleting meal ${mid} for ${uid}`);
     return { success: true, id: mid };
   },
 
@@ -239,21 +228,18 @@ export const MockAPI = {
     uid: string,
     data: DeleteMealHistoryRequest,
   ): Promise<{ success: boolean; deletedCount: number }> => {
+    console.log(`MockAPI: Bulk deleting meal history.`, data.id);
     await new Promise((resolve) => setTimeout(resolve, 600));
-    console.log(`Mocking bulk deleting meals for ${uid}:`, data.id);
     return { success: true, deletedCount: data.id.length };
   },
 
   // TODO: Add this route to backend too
-  // GET /api/user/:uid/recommendations
   getRecommendedDishes: async (uid: string): Promise<Dish[]> => {
+    console.log(`MockAPI: Fetching recommended dishes.`);
     await new Promise((resolve) => setTimeout(resolve, 600));
-    console.log(`Mocking fetching recommended dishes for user ${uid}`);
-
     const shuffledDishes = [...MOCK_RECOMMENDED_DISHES].sort(
       () => 0.5 - Math.random(),
     );
-
     return shuffledDishes;
   },
 };
