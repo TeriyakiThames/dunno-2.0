@@ -72,6 +72,8 @@ export function Input({
             className="placeholder:text-grey-40 w-full bg-transparent py-4 leading-4 outline-none"
           />
         ) : (
+          // Dropdown Type
+          // TODO: Edit the style for dropdown options
           <select
             value={value}
             onChange={(e) => onChange(e.target.value)}

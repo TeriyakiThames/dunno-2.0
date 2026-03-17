@@ -10,9 +10,11 @@ export const userSchema = z.object({
       "Must be in DD/MM/YYYY format!",
     ),
 
-  weight: z.coerce.number().positive("Weight must be greater than 0!"),
+  weight: z.coerce.number().positive("Weight must be a number greater than 0!"),
 
-  height: z.coerce.number().positive("Height must be greater than 0!"),
+  height: z.coerce
+    .number()
+    .positive("Height must be a number  greater than 0!"),
 
   sex: z.enum(["Male", "Female"], {
     message: "Please select a sex!",
@@ -35,7 +37,7 @@ export const userSchema = z.object({
     )
     .optional(),
 
-  goal: z.enum(["balanced", "moderate", "protein", "ketogenic"], {
+  goal: z.enum(["balanced", "moderate", "protein", "keto"], {
     message: "Please select a goal!",
   }),
 });
