@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { t, Messages } from "@/lib/internationalisation/i18n-helpers";
+import { Input } from "@/components/Shared/Input";
 
 interface SearchBarProps {
   messages: Messages;
@@ -13,17 +13,11 @@ export default function SearchBar({ messages }: SearchBarProps) {
         {t("search_prompt", messages)}
       </h2>
 
-      <div className="mx-4.5 flex h-13 items-center gap-3 rounded-xl border-[0.5px] border-gray-300 bg-white px-5 py-4 transition-colors focus-within:border-green-100">
-        <Image
-          src="/Icons/SearchIcon.svg"
-          alt="Search Icon"
-          width={20}
-          height={20}
-        />
-        <input
-          type="text"
+      <div className="mx-4.5">
+        <Input
           placeholder={t("search_placeholder", messages)}
-          className="w-full bg-transparent text-[#1a1a1a] outline-none placeholder:text-[#b3b3b3]"
+          type={"text"}
+          frontImageURL="/Icons/SearchIcon.svg"
         />
       </div>
     </>
