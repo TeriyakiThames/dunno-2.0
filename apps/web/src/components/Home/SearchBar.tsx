@@ -13,7 +13,7 @@ export default function SearchBar({ messages }: SearchBarProps) {
         {t("search_prompt", messages)}
       </h2>
 
-      <div className="focus-within:border-primary-green-1 mx-4.5 flex h-13 items-center gap-3 rounded-xl border-[0.5px] border-gray-300 bg-white px-5 py-4 transition-colors">
+      <div className="mx-4.5 flex h-13 items-center gap-3 rounded-xl border-[0.5px] border-gray-300 bg-white px-5 py-4 transition-colors focus-within:border-green-100">
         <Image
           src="/Icons/SearchIcon.svg"
           alt="Search Icon"

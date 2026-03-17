@@ -47,7 +47,7 @@ export default function LoginButton({
   return (
     <div className="fixed inset-x-0 bottom-25 mx-auto flex w-[320px] flex-col gap-3">
       <button
-        className="bg-primary-green-1 h-16 w-full rounded-2xl px-16 py-2 text-center text-lg font-bold text-white hover:bg-[#6cbcad]"
+        className="hover:bg-green-80 h-16 w-full rounded-2xl bg-green-100 px-16 py-2 text-center text-lg font-bold text-white"
         onClick={loginWithGoogle}
         disabled={isGoogleLoading}
       >
@@ -57,7 +57,7 @@ export default function LoginButton({
       </button>
 
       {error && (
-        <p className="text-center text-sm font-semibold text-[#adadad]">
+        <p className="text-grey-40 text-center text-sm font-semibold">
           {error}
         </p>
       )}

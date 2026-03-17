@@ -1,29 +1,28 @@
 import ProgressBar from "../Shared/ProgressBar";
-import { t, Messages } from "@/lib/internationalisation/i18n-helpers";
+import { t } from "@/lib/internationalisation/i18n-helpers";
+import { User, DietProfile, Messages } from "@calculories/shared-types";
 
 interface CalorieGoalsProps {
-  calories: number;
-  caloriesMax?: number;
-  protein: number;
-  proteinMax?: number;
-  carbs: number;
-  carbsMax?: number;
-  fats: number;
-  fatsMax?: number;
+  user: User;
+  dietProfile: DietProfile;
   messages: Messages;
 }
 
 export default function CalorieGoals({
-  calories = 0,
-  caloriesMax = 2200,
-  protein = 0,
-  proteinMax = 150,
-  carbs = 0,
-  carbsMax = 220,
-  fats = 0,
-  fatsMax = 75,
+  user,
+  dietProfile,
   messages,
 }: CalorieGoalsProps) {
+  const calories = dietProfile?.calorie_intake || 0;
+  const protein = dietProfile?.protein_intake || 0;
+  const carbs = dietProfile?.carbs_intake || 0;
+  const fats = dietProfile?.fat_intake || 0;
+
+  const caloriesMax = user?.target_calories || 2200;
+  const proteinMax = user?.target_protein || 150;
+  const carbsMax = user?.target_carbs || 220;
+  const fatsMax = user?.target_fats || 75;
+
   return (
     <div className="mx-4.5 my-6">
       <ProgressBar
@@ -31,8 +30,8 @@ export default function CalorieGoals({
         current={calories}
         max={caloriesMax}
         unit="kcal"
-        fillColor="bg-[#4AAE9B]"
-        trackColor="bg-[#cae1dd]"
+        fillColor="bg-green-100"
+        trackColor="bg-green-20"
         isMain
       />
 
@@ -42,8 +41,8 @@ export default function CalorieGoals({
           current={protein}
           max={proteinMax}
           unit="g"
-          fillColor="bg-secondary-orange-1"
-          trackColor="bg-[#edf3f2]"
+          fillColor="bg-orange-100"
+          trackColor="bg-orange-20"
         />
 
         <ProgressBar
@@ -51,8 +50,8 @@ export default function CalorieGoals({
           current={carbs}
           max={carbsMax}
           unit="g"
-          fillColor="bg-secondary-orange-1"
-          trackColor="bg-[#edf3f2]"
+          fillColor="bg-orange-100"
+          trackColor="bg-orange-20"
         />
 
         <ProgressBar
@@ -60,8 +59,8 @@ export default function CalorieGoals({
           current={fats}
           max={fatsMax}
           unit="g"
-          fillColor="bg-secondary-orange-1"
-          trackColor="bg-[#edf3f2]"
+          fillColor="bg-orange-100"
+          trackColor="bg-orange-20"
         />
       </div>
     </div>

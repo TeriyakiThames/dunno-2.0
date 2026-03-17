@@ -1,43 +1,18 @@
 "use client";
 
 import useUser from "@/hooks/useUser";
+import useSWR from "swr";
 import LocaleSwitcher from "@/components/Shared/LocaleSwitcher";
 import AuthButton from "@/components/Shared/AuthButton";
 import TopBar from "@/components/Home/TopBar";
 import Streak from "@/components/Home/Streak";
 import CalorieGoals from "@/components/Home/CalorieGoals";
-import SmartPicks from "@/components/Home/SmartPicks";
+import SmartPicks from "@/components/Home/SmartPicks/SmartPicks";
 import SearchBar from "@/components/Home/SearchBar";
 import PageBottom from "@/components/Shared/PageBottom";
-import { Locale, Messages } from "@calculories/shared-types";
 import DeleteAccountButton from "@/components/Shared/DeleteAccountButton";
-
-const MOCK_RECOMMENDED_MEALS = [
-  {
-    restaurant: "Green Eats",
-    menu: "Grilled Salmon",
-    calories: 450,
-    distance: 10,
-    price: 210,
-    imageUrl: "/Home/UnknownMeal.svg",
-  },
-  {
-    restaurant: "Healthy Hub",
-    menu: "Quinoa Buddha Bowl",
-    calories: 380,
-    distance: 1.2,
-    price: 185,
-    imageUrl: "/Home/UnknownMeal.svg",
-  },
-  {
-    restaurant: "Pasta Fresh",
-    menu: "Zucchini Pesto Pasta",
-    calories: 520,
-    distance: 3.5,
-    price: 240,
-    imageUrl: "/Home/UnknownMeal.svg",
-  },
-];
+import { MockAPI } from "@/mocks/mockAPI";
+import { Locale, Messages } from "@calculories/shared-types";
 
 export default function HomeClient({
   locale,
@@ -46,20 +21,33 @@ export default function HomeClient({
   locale: Locale;
   messages: Messages;
 }) {
-  const { loading, error, user } = useUser();
+  const { loading: authLoading, error: authError, user: authUser } = useUser();
 
-  if (loading) {
+  const { data: appUser, isLoading: apiLoading } = useSWR(
+    authUser?.id ? `user-profile-${authUser.id}` : null,
+    () => MockAPI.getUserProfile(authUser!.id as string),
+  );
+
+  const {
+    data: recommendedDishes = [],
+    mutate: refreshSmartPicks,
+    isValidating: isRefreshingPicks,
+  } = useSWR(authUser?.id ? `smart-picks-${authUser.id}` : null, () =>
+    MockAPI.getRecommendedDishes(authUser!.id as string),
+  );
+
+  if (authLoading || apiLoading) {
     return (
-      <div className="flex items-center space-x-2 text-gray-500">
+      <div className="flex items-center space-x-2 p-4 text-gray-500">
         <span>Loading user data...</span>
       </div>
     );
   }
 
-  if (error) {
+  if (authError) {
     return (
-      <div className="rounded-md border border-red-200 bg-red-50 p-4 text-red-600">
-        <p>Error: {error.message}</p>
+      <div className="m-4 rounded-md border border-red-200 bg-red-50 p-4 text-red-600">
+        <p>Error: {authError.message}</p>
       </div>
     );
   }
@@ -71,29 +59,37 @@ export default function HomeClient({
         <AuthButton messages={messages} />
         <DeleteAccountButton messages={messages} />
       </div>
-      {user ? (
-        <>
-          <TopBar
-            name={user.user_metadata.name}
-            imageURL={
-              user.user_metadata?.avatar_url || "/Home/MockProfilePicture.svg"
-            }
-            messages={messages}
-          />
-        </>
+
+      {authUser ? (
+        <TopBar
+          name={authUser.user_metadata?.name || appUser?.username || "User"}
+          imageURL={
+            authUser.user_metadata?.avatar_url || "/Home/MockProfilePicture.svg"
+          }
+          messages={messages}
+        />
       ) : (
         <TopBar name={"User"} messages={messages} />
       )}
 
-      <Streak date={5} messages={messages} />
-      <CalorieGoals
-        calories={1200}
-        protein={85}
-        carbs={145}
-        fats={45}
-        messages={messages}
-      />
-      <SmartPicks meals={MOCK_RECOMMENDED_MEALS} messages={messages} />
+      {appUser && (
+        <>
+          <Streak dietProfile={appUser.dietProfile} messages={messages} />
+          <CalorieGoals
+            user={appUser}
+            dietProfile={appUser.dietProfile}
+            messages={messages}
+          />
+          <SmartPicks
+            dishes={recommendedDishes}
+            messages={messages}
+            locale={locale}
+            onRefresh={() => refreshSmartPicks()}
+            isRefreshing={isRefreshingPicks}
+          />
+        </>
+      )}
+
       <SearchBar messages={messages} />
       <PageBottom />
     </main>
