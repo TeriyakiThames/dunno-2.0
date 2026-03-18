@@ -28,7 +28,6 @@ export default function SetupTitle({
         {t("Quick Setup", messages)}
       </h1>
 
-      {/* TODO: Add translations for Setup page */}
       <LocaleSwitcher locale={locale} />
     </div>
   );
