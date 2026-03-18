@@ -15,7 +15,6 @@ interface InputProps {
   type: "text" | "dropdown";
   value?: string;
   onChange: (value: string) => void;
-
   frontImageURL?: string;
   backImageURL?: string;
   options?: string[];
@@ -24,7 +23,7 @@ interface InputProps {
 
 export function InputHeader({ header, subheader }: InputHeaderProps) {
   return (
-    <div>
+    <div className="mb-1">
       <p className="text-grey-100 font-bold">{header}</p>
       {subheader && (
         <p className="text-grey-60 text-xs font-normal">{subheader}</p>
@@ -41,7 +40,7 @@ export function Input({
   backImageURL,
   type,
   options = [],
-  value,
+  value = "",
   error = "",
   onChange,
 }: InputProps) {
@@ -57,13 +56,17 @@ export function Input({
         setIsOpen(false);
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  }, [isOpen]);
 
   return (
     <div className="flex flex-col gap-2">
-      <InputHeader header={header} subheader={subheader} />
+      {header && <InputHeader header={header} subheader={subheader} />}
 
       <div className="relative w-full" ref={dropdownRef}>
         <div
@@ -81,7 +84,7 @@ export function Input({
           {frontImageURL && (
             <Image
               src={frontImageURL}
-              alt="Front icon"
+              alt=""
               width={20}
               height={20}
               className="mr-3"
@@ -97,17 +100,16 @@ export function Input({
               className="placeholder:text-grey-40 w-full bg-transparent py-4 leading-4 outline-none"
             />
           ) : (
-            <div className="flex w-full items-center justify-between py-4 leading-4 outline-none">
+            <div className="flex w-full items-center justify-between py-4 leading-4">
               <span className={value === "" ? "text-grey-40" : "text-grey-100"}>
                 {value === "" ? placeholder : value}
               </span>
-
               <Image
                 src="/Icons/Dropdown.svg"
-                alt="Dropdown Arrow"
+                alt=""
                 width={20}
                 height={20}
-                className="ml-3"
+                className={`ml-3 transition-transform ${isOpen ? "rotate-180" : ""}`}
               />
             </div>
           )}
@@ -115,7 +117,7 @@ export function Input({
           {backImageURL && (
             <Image
               src={backImageURL}
-              alt="Back icon"
+              alt=""
               width={20}
               height={20}
               className="ml-3"
@@ -123,11 +125,12 @@ export function Input({
           )}
         </div>
 
+        {/* Dropdown Menu */}
         {type === "dropdown" && isOpen && (
           <div className="border-grey-20 bg-background-1 absolute top-full left-0 z-50 mt-2 w-full overflow-hidden rounded-xl border-[1.5px] shadow-md">
             {options.map((opt, index) => (
               <div
-                key={index}
+                key={`${opt}-${index}`}
                 onClick={() => {
                   onChange(opt);
                   setIsOpen(false);
@@ -141,9 +144,7 @@ export function Input({
         )}
       </div>
 
-      {error && (
-        <p className="text-xs leading-3.5 font-normal text-red-100">{error}</p>
-      )}
+      {error && <p className="text-xs font-normal text-red-100">{error}</p>}
     </div>
   );
 }
