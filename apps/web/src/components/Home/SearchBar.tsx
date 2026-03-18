@@ -1,6 +1,8 @@
+"use client";
+
 import { t, Messages } from "@/lib/internationalisation/i18n-helpers";
 import { Input } from "@/components/Shared/Input";
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useEffect, useCallback } from "react";
 
 interface SearchBarProps {
   messages: Messages;
@@ -9,16 +11,31 @@ interface SearchBarProps {
 export default function SearchBar({ messages }: SearchBarProps) {
   const [searchQuery, setSearchQuery] = useState("");
 
+  const performSearch = useCallback((query: string) => {
+    const trimmedQuery = query.trim();
+    if (!trimmedQuery) return;
+
+    console.log("Executing search for:", trimmedQuery);
+    // TODO: Call backend API here
+  }, []);
+
+  useEffect(() => {
+    if (!searchQuery) return;
+
+    const delayDebounceFn = setTimeout(() => {
+      performSearch(searchQuery);
+    }, 500);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchQuery, performSearch]);
+
   const handleInputChange = (value: string) => {
     setSearchQuery(value);
   };
 
-  const handleSearch = (e: FormEvent) => {
+  const handleManualSearch = (e: FormEvent) => {
     e.preventDefault();
-    if (!searchQuery.trim()) return;
-
-    console.log("Executing search for:", searchQuery);
-    // TODO: Call backend API here when its done
+    performSearch(searchQuery);
   };
 
   return (
@@ -27,7 +44,7 @@ export default function SearchBar({ messages }: SearchBarProps) {
         {t("search_prompt", messages)}
       </h2>
 
-      <form onSubmit={handleSearch} className="mx-4.5">
+      <form onSubmit={handleManualSearch} className="mx-4.5">
         <Input
           placeholder={t("search_placeholder", messages)}
           type={"text"}
