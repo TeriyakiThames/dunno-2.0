@@ -76,7 +76,7 @@ export default function SetupForm({
     validateField(fieldName, numericValue);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const rawData = {
@@ -90,22 +90,30 @@ export default function SetupForm({
       goal,
     };
 
-    const validationResult = userSchema.safeParse(rawData);
+    try {
+      const validationResult = userSchema.safeParse(rawData);
 
-    if (!validationResult.success) {
-      const formattedErrors: Record<string, string> = {};
-      validationResult.error.issues.forEach((issue) => {
-        formattedErrors[String(issue.path[0])] = issue.message;
-      });
+      if (!validationResult.success) {
+        const formattedErrors: Record<string, string> = {};
+        validationResult.error.issues.forEach((issue) => {
+          formattedErrors[String(issue.path[0])] = issue.message;
+        });
 
-      setErrors(formattedErrors);
-      console.log("Validation Failed:", formattedErrors);
-      return;
+        setErrors(formattedErrors);
+        console.log("Validation Failed:", formattedErrors);
+        return;
+      }
+
+      setErrors({});
+      console.log("Data saved to backend:", validationResult.data);
+      e.currentTarget.reset();
+
+      console.log("Form Submitted and Reset Successfully");
+      redirect(`/${locale}`);
+    } catch (error) {
+      console.error("Submission error:", error);
+      setErrors({ submit: "Failed to save user data. Please try again." });
     }
-
-    setErrors({});
-    console.log("Form Submitted Successfully:", validationResult.data);
-    redirect(`/${locale}`);
   };
 
   return (
